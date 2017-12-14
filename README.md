@@ -1,39 +1,87 @@
-# RemoveEmoji
+Remove Emoji
+=================================================
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/remove_emoji`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Gem Version](https://badge.fury.io/rb/remove_emoji.svg)](https://badge.fury.io/rb/remove_emoji)
+[![Build Status](https://travis-ci.org/guanting112/remove_emoji.svg?branch=master)](https://travis-ci.org/guanting112/remove_emoji)
+[![Code Climate](https://codeclimate.com/github/guanting112/remove_emoji/badges/gpa.svg)](https://codeclimate.com/github/guanting112/remove_emoji)
 
-TODO: Delete this and the text above, and describe your gem
+此為針對「移除」Unicode Emoji 圖示 所開發的專屬套件，
+您可以透過該套件移除令人困擾的 Emoji 符號。
+( It can remove any of the emoji supported by that package. )
 
-## Installation
+![emoji](https://i.imgur.com/yA6WYmS.jpg)
 
-Add this line to your application's Gemfile:
+
+Installation / 安裝方式
+--------
+
+請在您的 Ruby 或 Rails 專案裡的 Gemfile 加入以下指令，然後執行 bundle install 更新套件即可
 
 ```ruby
 gem 'remove_emoji'
 ```
 
-And then execute:
+Usage / 使用方式
+--------
 
-    $ bundle
+使用方式很簡單，僅需要呼叫 RemoveEmoji::Sanitize.call 遞入你要過濾的字串即可過濾。
 
-Or install it yourself as:
+```ruby
+require 'remove_emoji'
 
-    $ gem install remove_emoji
+original_string = "👦🏻👦🏼👦🏽👦🏾👦🏿👧👧🏻👧🏼👧🏽👧🏾👧🏿👨👨🏻"
 
-## Usage
+puts RemoveEmoji::Sanitize.call(original_string)
+```
 
-TODO: Write usage instructions here
+```ruby
+require 'remove_emoji'
 
-## Development
+# ==========
+#   Input
+# ==========
+original_string = <<-STRING
+abcdefghijklmnopqrstuvwxyz....0123456789
+不極，物片類書車裡！十今果半接國先雄
+ニッポン」「ニホン」両方使用される中
+🚗🚓🚨🚲🚡🚅🛶💺🚏🏦🕋🏦📱⌚️🖲🕯🔮🎎🎐💌📦
+📌☮️💟🔯☪️㊗️🈵🆚💯❕🔞🚷🔰⁉️⚠️💤🌐🌀▶️🔠🔣↔️↩️👁‍🗨
+◽️🔲🇵🇦🏳️🏳️‍🌈🇹🇲🇹🇷🤛🤜🏼👍🏽👌☝🏼🥝🥦🌶🌽🍎
+🍲🍔🥞🍝🍔🍗🌮🍯🥠🥢🍴🥄🥂☕️😀😃😄🤣😂😅😆☺️😊😍😌
+😘😗😙😚😜😝😛😋🤨🧐🤓😒😏🤩🤩😎😞😔😖😢😣☹️😩🙁🤯
+😰😓😦😲🤒🤕👿👹👽✊🏼
+には文중국, 일본, 베트남 등 한자 문화권에 속하는 아시아 여러 국가에서는 
+한국어的差异外，通常认为还存在词汇上的差异。例如繁体中文里多用的“原
+لمنطقة الشرق الأوسط هيلي: التحرك ضد إيران سيبدأ من مجلس الأمن
+STRING
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+# ==========
+#   Output
+# ==========
+puts RemoveEmoji::Sanitize.call(original_string)
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+# Result:
+# abcdefghijklmnopqrstuvwxyz....0123456789
+# 不極，物片類書車裡！十今果半接國先雄
+# ニッポン」「ニホン」両方使用される中
+# 
+# 
+# 
+# 
+# 
+# 
+# には文중국, 일본, 베트남 등 한자 문화권에 속하는 아시아 여러 국가에서는
+# 한국어的差异外，通常认为还存在词汇上的差异。例如繁体中文里多用的“原
+# لمنطقة الشرق الأوسط هيلي: التحرك ضد إيران سيبدأ من مجلس الأمن
 
-## Contributing
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/remove_emoji.
+Demo ( Before / After )
+------
 
-## License
+![emoji_effect](https://i.imgur.com/OzcQYWL.jpg)
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+LICENSE
+--------
+
+本專案原始碼採 MIT LICENSE 授權 ( 詳見 LICENSE 檔案 )
