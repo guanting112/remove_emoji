@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = RemoveEmoji::VERSION
   spec.authors       = ["Guanting Chen"]
   spec.email         = ["cgt886@gmail.com"]
-  spec.summary       = %q{ Remove Emoji 😈🚫😱 ( for Ruby 2.x / Rails 4、5; 2017 version )}
-  spec.description   = %q{ Remove Emoji 😈🚫😱 ( for Ruby 2.x / Rails 4、5; 2017 version )}
+  spec.summary       = %q{ Remove Emoji 😈🚫😱 ( 2017 version, for Ruby 2.x / Rails 4 ~ 5.x )}
+  spec.description   = %q{ Remove Emoji 😈🚫😱 ( 2017 version, for Ruby 2.x / Rails 4 ~ 5.x )}
   spec.homepage      = "https://github.com/guanting112/remove_emoji"
   spec.license       = "MIT"
   spec.platform      = Gem::Platform::RUBY
