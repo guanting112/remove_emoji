@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'remove_emoji'
+require 'benchmark'
 
 describe 'RemoveEmoji::Sanitize' do
 
@@ -391,6 +392,40 @@ STRING
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
 
       sanitized_string.must_equal(original_string)
+    end
+
+
+    it '必須不會移除到日本資料跟文中的所有符號內容' do
+      original_string = nil
+      sanitized_string = nil
+      benchmark_info = Benchmark.measure do
+        100.times do
+          original_string = <<-STRING
+    == Sample Text for Test Program ==
+    「にっぽん」、「にほん」と読まれる。どちらも多く用いられているため、
+    日本政府は正式な読み方をどちらか一方には定めておらず、どちらの読みで
+    も良いとしている[5]。
+
+    7世紀の後半の国際関係から生じた「日本」国号は、当時の国際的な読み（音読）
+    で「ニッポン」（呉音）ないし「ジッポン」（漢音）と読まれたものと推測される
+    [6]。いつ「ニホン」の読みが始まったか定かでない。仮名表記では「にほん」と
+    表記された。平安時代には「ひのもと」とも和訓されるようになった。
+    室町時代の謡曲・狂言は、中国人に「ニッポン」と読ませ、日本人に「ニホン」と
+    読ませている。安土桃山時代にポルトガル人が編纂した『日葡辞書』や『日本小文
+    典』等には、「ニッポン」「ニホン」「ジッポン」の読みが見られ、その用例から
+    判断すると、改まった場面・強調したい場合に「ニッポン」が使われ、日常の場面
+    で「ニホン」が使われていた[7]。このことから小池清治は、中世の日本人が中国
+    語的な語感のある「ジッポン」を使用したのは、中国人・西洋人など対外的な場面
+    に限定されていて、日常だと「ニッポン」「ニホン」が用いられていたのでは、と
+    推測している[8]。なお、現在に伝わっていない「ジッポン」音については、その
+    他の言語も参照。
+    STRING
+          sanitized_string = RemoveEmoji::Sanitize.call(original_string)
+        end
+      end
+
+      best_performance = benchmark_info.real < 0.05
+      best_performance.must_equal(true)
     end
 
   end
