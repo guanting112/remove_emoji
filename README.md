@@ -15,7 +15,13 @@ Remove Emoji
 Installation / 安裝方式
 --------
 
-請在您的 Ruby 或 Rails 專案裡的 Gemfile 加入以下指令，然後執行 bundle install 更新套件即可
+via Rubygems
+
+```shell
+gem install remove_emoji
+```
+
+In your Gemfile:
 
 ```ruby
 gem 'remove_emoji'
