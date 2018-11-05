@@ -6,6 +6,177 @@ describe 'RemoveEmoji::Sanitize' do
 
   describe '用一般文字測試 sanitize 方法，是否能正常運作' do
 
+    it '必須可以處理 emoji 11.0 標準' do
+      original_string = <<-STRING
+🥰 Smiling Face With 3 Hearts
+🥵 Hot Face
+🥶 Cold Face
+🥳 Partying Face
+🥴 Woozy Face
+🥺 Pleading Face
+👨‍🦰 Man: Red Hair
+👨🏻‍🦰 Man: Light Skin Tone, Red Hair
+👨🏼‍🦰 Man: Medium-Light Skin Tone, Red Hair
+👨🏽‍🦰 Man: Medium Skin Tone, Red Hair
+👨🏾‍🦰 Man: Medium-Dark Skin Tone, Red Hair
+👨🏿‍🦰 Man: Dark Skin Tone, Red Hair
+👩‍🦰 Woman: Red Hair
+👩🏻‍🦰 Woman: Light Skin Tone, Red Hair
+👩🏼‍🦰 Woman: Medium-Light Skin Tone, Red Hair
+👩🏽‍🦰 Woman: Medium Skin Tone, Red Hair
+👩🏾‍🦰 Woman: Medium-Dark Skin Tone, Red Hair
+👩🏿‍🦰 Woman: Dark Skin Tone, Red Hair
+👨‍🦱 Man: Curly Hair
+👨🏻‍🦱 Man: Light Skin Tone, Curly Hair
+👨🏼‍🦱 Man: Medium-Light Skin Tone, Curly Hair
+👨🏽‍🦱 Man: Medium Skin Tone, Curly Hair
+👨🏾‍🦱 Man: Medium-Dark Skin Tone, Curly Hair
+👨🏿‍🦱 Man: Dark Skin Tone, Curly Hair
+👩‍🦱 Woman: Curly Hair
+👩🏻‍🦱 Woman: Light Skin Tone, Curly Hair
+👩🏼‍🦱 Woman: Medium-Light Skin Tone, Curly Hair
+👩🏽‍🦱 Woman: Medium Skin Tone, Curly Hair
+👩🏾‍🦱 Woman: Medium-Dark Skin Tone, Curly Hair
+👩🏿‍🦱 Woman: Dark Skin Tone, Curly Hair
+👨‍🦲 Man: Bald
+👨🏻‍🦲 Man: Light Skin Tone, Bald
+👨🏼‍🦲 Man: Medium-Light Skin Tone, Bald
+👨🏽‍🦲 Man: Medium Skin Tone, Bald
+👨🏾‍🦲 Man: Medium-Dark Skin Tone, Bald
+👨🏿‍🦲 Man: Dark Skin Tone, Bald
+👩‍🦲 Woman: Bald
+👩🏻‍🦲 Woman: Light Skin Tone, Bald
+👩🏼‍🦲 Woman: Medium-Light Skin Tone, Bald
+👩🏽‍🦲 Woman: Medium Skin Tone, Bald
+👩🏾‍🦲 Woman: Medium-Dark Skin Tone, Bald
+👩🏿‍🦲 Woman: Dark Skin Tone, Bald
+👨‍🦳 Man: White Hair
+👨🏻‍🦳 Man: Light Skin Tone, White Hair
+👨🏼‍🦳 Man: Medium-Light Skin Tone, White Hair
+👨🏽‍🦳 Man: Medium Skin Tone, White Hair
+👨🏾‍🦳 Man: Medium-Dark Skin Tone, White Hair
+👨🏿‍🦳 Man: Dark Skin Tone, White Hair
+👩‍🦳 Woman: White Hair
+👩🏻‍🦳 Woman: Light Skin Tone, White Hair
+👩🏼‍🦳 Woman: Medium-Light Skin Tone, White Hair
+👩🏽‍🦳 Woman: Medium Skin Tone, White Hair
+👩🏾‍🦳 Woman: Medium-Dark Skin Tone, White Hair
+👩🏿‍🦳 Woman: Dark Skin Tone, White Hair
+🦸 Superhero
+🦸🏻 Superhero: Light Skin Tone
+🦸🏼 Superhero: Medium-Light Skin Tone
+🦸🏽 Superhero: Medium Skin Tone
+🦸🏾 Superhero: Medium-Dark Skin Tone
+🦸🏿 Superhero: Dark Skin Tone
+🦸‍♀️ Woman Superhero
+🦸🏻‍♀️ Woman Superhero: Light Skin Tone
+🦸🏼‍♀️ Woman Superhero: Medium-Light Skin Tone
+🦸🏽‍♀️ Woman Superhero: Medium Skin Tone
+🦸🏾‍♀️ Woman Superhero: Medium-Dark Skin Tone
+🦸🏿‍♀️ Woman Superhero: Dark Skin Tone
+🦸‍♂️ Man Superhero
+🦸🏻‍♂️ Man Superhero: Light Skin Tone
+🦸🏼‍♂️ Man Superhero: Medium-Light Skin Tone
+🦸🏽‍♂️ Man Superhero: Medium Skin Tone
+🦸🏾‍♂️ Man Superhero: Medium-Dark Skin Tone
+🦸🏿‍♂️ Man Superhero: Dark Skin Tone
+🦹 Supervillain
+🦹🏻 Supervillain: Light Skin Tone
+🦹🏼 Supervillain: Medium-Light Skin Tone
+🦹🏽 Supervillain: Medium Skin Tone
+🦹🏾 Supervillain: Medium-Dark Skin Tone
+🦹🏿 Supervillain: Dark Skin Tone
+🦹‍♀️ Woman Supervillain
+🦹🏻‍♀️ Woman Supervillain: Light Skin Tone
+🦹🏼‍♀️ Woman Supervillain: Medium-Light Skin Tone
+🦹🏽‍♀️ Woman Supervillain: Medium Skin Tone
+🦹🏾‍♀️ Woman Supervillain: Medium-Dark Skin Tone
+🦹🏿‍♀️ Woman Supervillain: Dark Skin Tone
+🦹‍♂️ Man Supervillain
+🦹🏻‍♂️ Man Supervillain: Light Skin Tone
+🦹🏼‍♂️ Man Supervillain: Medium-Light Skin Tone
+🦹🏽‍♂️ Man Supervillain: Medium Skin Tone
+🦹🏾‍♂️ Man Supervillain: Medium-Dark Skin Tone
+🦹🏿‍♂️ Man Supervillain: Dark Skin Tone
+🦵 Leg
+🦵🏻 Leg: Light Skin Tone
+🦵🏼 Leg: Medium-Light Skin Tone
+🦵🏽 Leg: Medium Skin Tone
+🦵🏾 Leg: Medium-Dark Skin Tone
+🦵🏿 Leg: Dark Skin Tone
+🦶 Foot
+🦶🏻 Foot: Light Skin Tone
+🦶🏼 Foot: Medium-Light Skin Tone
+🦶🏽 Foot: Medium Skin Tone
+🦶🏾 Foot: Medium-Dark Skin Tone
+🦶🏿 Foot: Dark Skin Tone
+🦴 Bone
+🦷 Tooth
+🥽 Goggles
+🥼 Lab Coat
+🥾 Hiking Boot
+🥿 Flat Shoe
+🦝 Raccoon
+🦙 Llama
+🦛 Hippopotamus
+🦘 Kangaroo
+🦡 Badger
+🦢 Swan
+🦚 Peacock
+🦜 Parrot
+🦞 Lobster
+🦟 Mosquito
+🦠 Microbe
+🥭 Mango
+🥬 Leafy Green
+🥯 Bagel
+🧂 Salt
+🥮 Moon Cake
+🧁 Cupcake
+🧭 Compass
+🧱 Brick
+🛹 Skateboard
+🧳 Luggage
+🧨 Firecracker
+🧧 Red Envelope
+🥎 Softball
+🥏 Flying Disc
+🥍 Lacrosse
+🧿 Nazar Amulet
+🧩 Jigsaw
+🧸 Teddy Bear
+♟ Chess Pawn
+🧮 Abacus
+🧾 Receipt
+🧰 Toolbox
+🧲 Magnet
+🧪 Test Tube
+🧫 Petri Dish
+🧬 DNA
+🧯 Fire Extinguisher
+🧴 Lotion Bottle
+🧵 Thread
+🧶 Yarn
+🧷 Safety Pin
+🧹 Broom
+🧺 Basket
+🧻 Roll of Paper
+🧼 Soap
+🧽 Sponge
+♾ Infinity
+🏴‍☠️ Pirate Flag
+🦰 Red Hair
+🦱 Curly Hair
+🦲 Bald
+🦳 White Hair
+STRING
+      sanitized_string = RemoveEmoji::Sanitize.call(original_string.gsub(/[\r\n]/, ''))
+
+      expect_string = " Smiling Face With 3 Hearts Hot Face Cold Face Partying Face Woozy Face Pleading Face Man: Red Hair Man: Light Skin Tone, Red Hair Man: Medium-Light Skin Tone, Red Hair Man: Medium Skin Tone, Red Hair Man: Medium-Dark Skin Tone, Red Hair Man: Dark Skin Tone, Red Hair Woman: Red Hair Woman: Light Skin Tone, Red Hair Woman: Medium-Light Skin Tone, Red Hair Woman: Medium Skin Tone, Red Hair Woman: Medium-Dark Skin Tone, Red Hair Woman: Dark Skin Tone, Red Hair Man: Curly Hair Man: Light Skin Tone, Curly Hair Man: Medium-Light Skin Tone, Curly Hair Man: Medium Skin Tone, Curly Hair Man: Medium-Dark Skin Tone, Curly Hair Man: Dark Skin Tone, Curly Hair Woman: Curly Hair Woman: Light Skin Tone, Curly Hair Woman: Medium-Light Skin Tone, Curly Hair Woman: Medium Skin Tone, Curly Hair Woman: Medium-Dark Skin Tone, Curly Hair Woman: Dark Skin Tone, Curly Hair Man: Bald Man: Light Skin Tone, Bald Man: Medium-Light Skin Tone, Bald Man: Medium Skin Tone, Bald Man: Medium-Dark Skin Tone, Bald Man: Dark Skin Tone, Bald Woman: Bald Woman: Light Skin Tone, Bald Woman: Medium-Light Skin Tone, Bald Woman: Medium Skin Tone, Bald Woman: Medium-Dark Skin Tone, Bald Woman: Dark Skin Tone, Bald Man: White Hair Man: Light Skin Tone, White Hair Man: Medium-Light Skin Tone, White Hair Man: Medium Skin Tone, White Hair Man: Medium-Dark Skin Tone, White Hair Man: Dark Skin Tone, White Hair Woman: White Hair Woman: Light Skin Tone, White Hair Woman: Medium-Light Skin Tone, White Hair Woman: Medium Skin Tone, White Hair Woman: Medium-Dark Skin Tone, White Hair Woman: Dark Skin Tone, White Hair Superhero Superhero: Light Skin Tone Superhero: Medium-Light Skin Tone Superhero: Medium Skin Tone Superhero: Medium-Dark Skin Tone Superhero: Dark Skin Tone Woman Superhero Woman Superhero: Light Skin Tone Woman Superhero: Medium-Light Skin Tone Woman Superhero: Medium Skin Tone Woman Superhero: Medium-Dark Skin Tone Woman Superhero: Dark Skin Tone Man Superhero Man Superhero: Light Skin Tone Man Superhero: Medium-Light Skin Tone Man Superhero: Medium Skin Tone Man Superhero: Medium-Dark Skin Tone Man Superhero: Dark Skin Tone Supervillain Supervillain: Light Skin Tone Supervillain: Medium-Light Skin Tone Supervillain: Medium Skin Tone Supervillain: Medium-Dark Skin Tone Supervillain: Dark Skin Tone Woman Supervillain Woman Supervillain: Light Skin Tone Woman Supervillain: Medium-Light Skin Tone Woman Supervillain: Medium Skin Tone Woman Supervillain: Medium-Dark Skin Tone Woman Supervillain: Dark Skin Tone Man Supervillain Man Supervillain: Light Skin Tone Man Supervillain: Medium-Light Skin Tone Man Supervillain: Medium Skin Tone Man Supervillain: Medium-Dark Skin Tone Man Supervillain: Dark Skin Tone Leg Leg: Light Skin Tone Leg: Medium-Light Skin Tone Leg: Medium Skin Tone Leg: Medium-Dark Skin Tone Leg: Dark Skin Tone Foot Foot: Light Skin Tone Foot: Medium-Light Skin Tone Foot: Medium Skin Tone Foot: Medium-Dark Skin Tone Foot: Dark Skin Tone Bone Tooth Goggles Lab Coat Hiking Boot Flat Shoe Raccoon Llama Hippopotamus Kangaroo Badger Swan Peacock Parrot Lobster Mosquito Microbe Mango Leafy Green Bagel Salt Moon Cake Cupcake Compass Brick Skateboard Luggage Firecracker Red Envelope Softball Flying Disc Lacrosse Nazar Amulet Jigsaw Teddy Bear Chess Pawn Abacus Receipt Toolbox Magnet Test Tube Petri Dish DNA Fire Extinguisher Lotion Bottle Thread Yarn Safety Pin Broom Basket Roll of Paper Soap Sponge Infinity Pirate Flag Red Hair Curly Hair Bald White Hair"
+
+      sanitized_string.must_equal(expect_string)
+    end
+
     it '必須清除以下常見的 emoji 符號' do
       original_string = <<-STRING
 ...‼⁉™↔↕↖↗↘↙↩↪⌚⌛⌨⏏⏩⏪⏫⏬⏭⏮⏯⏰⏱⏲
@@ -396,8 +567,7 @@ STRING
 
 
     it '必須不會移除到日本資料跟文中的所有符號內容' do
-      original_string = nil
-      sanitized_string = nil
+
       benchmark_info = Benchmark.measure do
         100.times do
           original_string = <<-STRING
@@ -440,7 +610,7 @@ STRING
     Ⅳ　Ⅴ　Ⅵ　Ⅶ　Ⅷ　Ⅸ　Ⅹ　Ⅺ
     ]　Ⅻⓐ　ⓑ　ⓒ　ⓓ　ⓔ　ⓕ　ⓖ　ⓗ　ⓘ　ⓙ　ⓚ　ⓛ　ⓜ　ⓝ　ⓞ　
     STRING
-          sanitized_string = RemoveEmoji::Sanitize.call(original_string)
+          RemoveEmoji::Sanitize.call(original_string)
         end
       end
 
