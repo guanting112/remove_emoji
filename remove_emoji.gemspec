@@ -8,12 +8,12 @@ Gem::Specification.new do |spec|
   spec.version       = RemoveEmoji::VERSION
   spec.authors       = ["Guanting Chen"]
   spec.email         = ["cgt886@gmail.com"]
-  spec.summary       = %q{ Remove Emoji 😈🚫😱 ( 2017 version, for Ruby 2.x / Rails 4 ~ 5.x )}
-  spec.description   = %q{ Remove Emoji 😈🚫😱 ( 2017 version, for Ruby 2.x / Rails 4 ~ 5.x )}
+  spec.summary       = %q{ Remove Emoji 😈🚫😱 ( 2017 version, for Ruby 2.x-3.x / Rails 4 ~ 5.x )}
+  spec.description   = %q{ Remove Emoji 😈🚫😱 ( 2017 version, for Ruby 2.x-3.x / Rails 4 ~ 5.x )}
   spec.homepage      = "https://github.com/guanting112/remove_emoji"
   spec.license       = "MIT"
   spec.platform      = Gem::Platform::RUBY
-  spec.required_ruby_version = '~> 2'
+  spec.required_ruby_version = '>= 2'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
