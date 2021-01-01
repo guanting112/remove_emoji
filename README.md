@@ -35,7 +35,7 @@ Usage / 使用方式
 ```ruby
 require 'remove_emoji'
 
-original_string = "Remove..😊😍😌🤕👿👹👧👧🏻👧🏼👧🏽🤜🏼👍🏽👌☝🏼🥝🥦🌶🌽🍎..Emoji"
+original_string = "😊😍😌🤕👿👹👧👧🏻👧🏼👧🏽🤜🏼👍🏽👌☝🏼🥝🥦🌶🌽🍎"
 
 puts RemoveEmoji::Sanitize.call(original_string)
 ```
