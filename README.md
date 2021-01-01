@@ -24,7 +24,7 @@ gem install remove_emoji
 In your Gemfile:
 
 ```ruby
-gem 'remove_emoji'
+gem 'remove_emoji', '~> 3.0.0'
 ```
 
 Usage / 使用方式
