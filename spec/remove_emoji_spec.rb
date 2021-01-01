@@ -6,6 +6,440 @@ describe 'RemoveEmoji::Sanitize' do
 
   describe '用一般文字測試 sanitize 方法，是否能正常運作' do
 
+    it '必須可以處理 emoji 13.1 標準' do
+      original_string = <<-STRING
+😶‍🌫️ E13.1 face in clouds
+😶‍🌫 E13.1 face in clouds
+😮‍💨 E13.1 face exhaling
+😵‍💫 E13.1 face with spiral eyes
+❤️‍🔥 E13.1 heart on fire
+❤‍🔥 E13.1 heart on fire
+❤️‍🩹 E13.1 mending heart
+❤‍🩹 E13.1 mending heart
+🧔‍♂️ E13.1 man: beard
+🧔‍♂ E13.1 man: beard
+🧔🏻‍♂️ E13.1 man: light skin tone, beard
+🧔🏻‍♂ E13.1 man: light skin tone, beard
+🧔🏼‍♂️ E13.1 man: medium-light skin tone, beard
+🧔🏼‍♂ E13.1 man: medium-light skin tone, beard
+🧔🏽‍♂️ E13.1 man: medium skin tone, beard
+🧔🏽‍♂ E13.1 man: medium skin tone, beard
+🧔🏾‍♂️ E13.1 man: medium-dark skin tone, beard
+🧔🏾‍♂ E13.1 man: medium-dark skin tone, beard
+🧔🏿‍♂️ E13.1 man: dark skin tone, beard
+🧔🏿‍♂ E13.1 man: dark skin tone, beard
+🧔‍♀️ E13.1 woman: beard
+🧔‍♀ E13.1 woman: beard
+🧔🏻‍♀️ E13.1 woman: light skin tone, beard
+🧔🏻‍♀ E13.1 woman: light skin tone, beard
+🧔🏼‍♀️ E13.1 woman: medium-light skin tone, beard
+🧔🏼‍♀ E13.1 woman: medium-light skin tone, beard
+🧔🏽‍♀️ E13.1 woman: medium skin tone, beard
+🧔🏽‍♀ E13.1 woman: medium skin tone, beard
+🧔🏾‍♀️ E13.1 woman: medium-dark skin tone, beard
+🧔🏾‍♀ E13.1 woman: medium-dark skin tone, beard
+🧔🏿‍♀️ E13.1 woman: dark skin tone, beard
+🧔🏿‍♀ E13.1 woman: dark skin tone, beard
+💏🏻 E13.1 kiss: light skin tone
+💏🏼 E13.1 kiss: medium-light skin tone
+💏🏽 E13.1 kiss: medium skin tone
+💏🏾 E13.1 kiss: medium-dark skin tone
+💏🏿 E13.1 kiss: dark skin tone
+🧑🏻‍❤️‍💋‍🧑🏼 E13.1 kiss: person, person, light skin tone, medium-light skin tone
+🧑🏻‍❤‍💋‍🧑🏼 E13.1 kiss: person, person, light skin tone, medium-light skin tone
+🧑🏻‍❤️‍💋‍🧑🏽 E13.1 kiss: person, person, light skin tone, medium skin tone
+🧑🏻‍❤‍💋‍🧑🏽 E13.1 kiss: person, person, light skin tone, medium skin tone
+🧑🏻‍❤️‍💋‍🧑🏾 E13.1 kiss: person, person, light skin tone, medium-dark skin tone
+🧑🏻‍❤‍💋‍🧑🏾 E13.1 kiss: person, person, light skin tone, medium-dark skin tone
+🧑🏻‍❤️‍💋‍🧑🏿 E13.1 kiss: person, person, light skin tone, dark skin tone
+🧑🏻‍❤‍💋‍🧑🏿 E13.1 kiss: person, person, light skin tone, dark skin tone
+🧑🏼‍❤️‍💋‍🧑🏻 E13.1 kiss: person, person, medium-light skin tone, light skin tone
+🧑🏼‍❤‍💋‍🧑🏻 E13.1 kiss: person, person, medium-light skin tone, light skin tone
+🧑🏼‍❤️‍💋‍🧑🏽 E13.1 kiss: person, person, medium-light skin tone, medium skin tone
+🧑🏼‍❤‍💋‍🧑🏽 E13.1 kiss: person, person, medium-light skin tone, medium skin tone
+🧑🏼‍❤️‍💋‍🧑🏾 E13.1 kiss: person, person, medium-light skin tone, medium-dark skin tone
+🧑🏼‍❤‍💋‍🧑🏾 E13.1 kiss: person, person, medium-light skin tone, medium-dark skin tone
+🧑🏼‍❤️‍💋‍🧑🏿 E13.1 kiss: person, person, medium-light skin tone, dark skin tone
+🧑🏼‍❤‍💋‍🧑🏿 E13.1 kiss: person, person, medium-light skin tone, dark skin tone
+🧑🏽‍❤️‍💋‍🧑🏻 E13.1 kiss: person, person, medium skin tone, light skin tone
+🧑🏽‍❤‍💋‍🧑🏻 E13.1 kiss: person, person, medium skin tone, light skin tone
+🧑🏽‍❤️‍💋‍🧑🏼 E13.1 kiss: person, person, medium skin tone, medium-light skin tone
+🧑🏽‍❤‍💋‍🧑🏼 E13.1 kiss: person, person, medium skin tone, medium-light skin tone
+🧑🏽‍❤️‍💋‍🧑🏾 E13.1 kiss: person, person, medium skin tone, medium-dark skin tone
+🧑🏽‍❤‍💋‍🧑🏾 E13.1 kiss: person, person, medium skin tone, medium-dark skin tone
+🧑🏽‍❤️‍💋‍🧑🏿 E13.1 kiss: person, person, medium skin tone, dark skin tone
+🧑🏽‍❤‍💋‍🧑🏿 E13.1 kiss: person, person, medium skin tone, dark skin tone
+🧑🏾‍❤️‍💋‍🧑🏻 E13.1 kiss: person, person, medium-dark skin tone, light skin tone
+🧑🏾‍❤‍💋‍🧑🏻 E13.1 kiss: person, person, medium-dark skin tone, light skin tone
+🧑🏾‍❤️‍💋‍🧑🏼 E13.1 kiss: person, person, medium-dark skin tone, medium-light skin tone
+🧑🏾‍❤‍💋‍🧑🏼 E13.1 kiss: person, person, medium-dark skin tone, medium-light skin tone
+🧑🏾‍❤️‍💋‍🧑🏽 E13.1 kiss: person, person, medium-dark skin tone, medium skin tone
+🧑🏾‍❤‍💋‍🧑🏽 E13.1 kiss: person, person, medium-dark skin tone, medium skin tone
+🧑🏾‍❤️‍💋‍🧑🏿 E13.1 kiss: person, person, medium-dark skin tone, dark skin tone
+🧑🏾‍❤‍💋‍🧑🏿 E13.1 kiss: person, person, medium-dark skin tone, dark skin tone
+🧑🏿‍❤️‍💋‍🧑🏻 E13.1 kiss: person, person, dark skin tone, light skin tone
+🧑🏿‍❤‍💋‍🧑🏻 E13.1 kiss: person, person, dark skin tone, light skin tone
+🧑🏿‍❤️‍💋‍🧑🏼 E13.1 kiss: person, person, dark skin tone, medium-light skin tone
+🧑🏿‍❤‍💋‍🧑🏼 E13.1 kiss: person, person, dark skin tone, medium-light skin tone
+🧑🏿‍❤️‍💋‍🧑🏽 E13.1 kiss: person, person, dark skin tone, medium skin tone
+🧑🏿‍❤‍💋‍🧑🏽 E13.1 kiss: person, person, dark skin tone, medium skin tone
+🧑🏿‍❤️‍💋‍🧑🏾 E13.1 kiss: person, person, dark skin tone, medium-dark skin tone
+🧑🏿‍❤‍💋‍🧑🏾 E13.1 kiss: person, person, dark skin tone, medium-dark skin tone
+👩🏻‍❤️‍💋‍👨🏻 E13.1 kiss: woman, man, light skin tone
+👩🏻‍❤‍💋‍👨🏻 E13.1 kiss: woman, man, light skin tone
+👩🏻‍❤️‍💋‍👨🏼 E13.1 kiss: woman, man, light skin tone, medium-light skin tone
+👩🏻‍❤‍💋‍👨🏼 E13.1 kiss: woman, man, light skin tone, medium-light skin tone
+👩🏻‍❤️‍💋‍👨🏽 E13.1 kiss: woman, man, light skin tone, medium skin tone
+👩🏻‍❤‍💋‍👨🏽 E13.1 kiss: woman, man, light skin tone, medium skin tone
+👩🏻‍❤️‍💋‍👨🏾 E13.1 kiss: woman, man, light skin tone, medium-dark skin tone
+👩🏻‍❤‍💋‍👨🏾 E13.1 kiss: woman, man, light skin tone, medium-dark skin tone
+👩🏻‍❤️‍💋‍👨🏿 E13.1 kiss: woman, man, light skin tone, dark skin tone
+👩🏻‍❤‍💋‍👨🏿 E13.1 kiss: woman, man, light skin tone, dark skin tone
+👩🏼‍❤️‍💋‍👨🏻 E13.1 kiss: woman, man, medium-light skin tone, light skin tone
+👩🏼‍❤‍💋‍👨🏻 E13.1 kiss: woman, man, medium-light skin tone, light skin tone
+👩🏼‍❤️‍💋‍👨🏼 E13.1 kiss: woman, man, medium-light skin tone
+👩🏼‍❤‍💋‍👨🏼 E13.1 kiss: woman, man, medium-light skin tone
+👩🏼‍❤️‍💋‍👨🏽 E13.1 kiss: woman, man, medium-light skin tone, medium skin tone
+👩🏼‍❤‍💋‍👨🏽 E13.1 kiss: woman, man, medium-light skin tone, medium skin tone
+👩🏼‍❤️‍💋‍👨🏾 E13.1 kiss: woman, man, medium-light skin tone, medium-dark skin tone
+👩🏼‍❤‍💋‍👨🏾 E13.1 kiss: woman, man, medium-light skin tone, medium-dark skin tone
+👩🏼‍❤️‍💋‍👨🏿 E13.1 kiss: woman, man, medium-light skin tone, dark skin tone
+👩🏼‍❤‍💋‍👨🏿 E13.1 kiss: woman, man, medium-light skin tone, dark skin tone
+👩🏽‍❤️‍💋‍👨🏻 E13.1 kiss: woman, man, medium skin tone, light skin tone
+👩🏽‍❤‍💋‍👨🏻 E13.1 kiss: woman, man, medium skin tone, light skin tone
+👩🏽‍❤️‍💋‍👨🏼 E13.1 kiss: woman, man, medium skin tone, medium-light skin tone
+👩🏽‍❤‍💋‍👨🏼 E13.1 kiss: woman, man, medium skin tone, medium-light skin tone
+👩🏽‍❤️‍💋‍👨🏽 E13.1 kiss: woman, man, medium skin tone
+👩🏽‍❤‍💋‍👨🏽 E13.1 kiss: woman, man, medium skin tone
+👩🏽‍❤️‍💋‍👨🏾 E13.1 kiss: woman, man, medium skin tone, medium-dark skin tone
+👩🏽‍❤‍💋‍👨🏾 E13.1 kiss: woman, man, medium skin tone, medium-dark skin tone
+👩🏽‍❤️‍💋‍👨🏿 E13.1 kiss: woman, man, medium skin tone, dark skin tone
+👩🏽‍❤‍💋‍👨🏿 E13.1 kiss: woman, man, medium skin tone, dark skin tone
+👩🏾‍❤️‍💋‍👨🏻 E13.1 kiss: woman, man, medium-dark skin tone, light skin tone
+👩🏾‍❤‍💋‍👨🏻 E13.1 kiss: woman, man, medium-dark skin tone, light skin tone
+👩🏾‍❤️‍💋‍👨🏼 E13.1 kiss: woman, man, medium-dark skin tone, medium-light skin tone
+👩🏾‍❤‍💋‍👨🏼 E13.1 kiss: woman, man, medium-dark skin tone, medium-light skin tone
+👩🏾‍❤️‍💋‍👨🏽 E13.1 kiss: woman, man, medium-dark skin tone, medium skin tone
+👩🏾‍❤‍💋‍👨🏽 E13.1 kiss: woman, man, medium-dark skin tone, medium skin tone
+👩🏾‍❤️‍💋‍👨🏾 E13.1 kiss: woman, man, medium-dark skin tone
+👩🏾‍❤‍💋‍👨🏾 E13.1 kiss: woman, man, medium-dark skin tone
+👩🏾‍❤️‍💋‍👨🏿 E13.1 kiss: woman, man, medium-dark skin tone, dark skin tone
+👩🏾‍❤‍💋‍👨🏿 E13.1 kiss: woman, man, medium-dark skin tone, dark skin tone
+👩🏿‍❤️‍💋‍👨🏻 E13.1 kiss: woman, man, dark skin tone, light skin tone
+👩🏿‍❤‍💋‍👨🏻 E13.1 kiss: woman, man, dark skin tone, light skin tone
+👩🏿‍❤️‍💋‍👨🏼 E13.1 kiss: woman, man, dark skin tone, medium-light skin tone
+👩🏿‍❤‍💋‍👨🏼 E13.1 kiss: woman, man, dark skin tone, medium-light skin tone
+👩🏿‍❤️‍💋‍👨🏽 E13.1 kiss: woman, man, dark skin tone, medium skin tone
+👩🏿‍❤‍💋‍👨🏽 E13.1 kiss: woman, man, dark skin tone, medium skin tone
+👩🏿‍❤️‍💋‍👨🏾 E13.1 kiss: woman, man, dark skin tone, medium-dark skin tone
+👩🏿‍❤‍💋‍👨🏾 E13.1 kiss: woman, man, dark skin tone, medium-dark skin tone
+👩🏿‍❤️‍💋‍👨🏿 E13.1 kiss: woman, man, dark skin tone
+👩🏿‍❤‍💋‍👨🏿 E13.1 kiss: woman, man, dark skin tone
+👨🏻‍❤️‍💋‍👨🏻 E13.1 kiss: man, man, light skin tone
+👨🏻‍❤‍💋‍👨🏻 E13.1 kiss: man, man, light skin tone
+👨🏻‍❤️‍💋‍👨🏼 E13.1 kiss: man, man, light skin tone, medium-light skin tone
+👨🏻‍❤‍💋‍👨🏼 E13.1 kiss: man, man, light skin tone, medium-light skin tone
+👨🏻‍❤️‍💋‍👨🏽 E13.1 kiss: man, man, light skin tone, medium skin tone
+👨🏻‍❤‍💋‍👨🏽 E13.1 kiss: man, man, light skin tone, medium skin tone
+👨🏻‍❤️‍💋‍👨🏾 E13.1 kiss: man, man, light skin tone, medium-dark skin tone
+👨🏻‍❤‍💋‍👨🏾 E13.1 kiss: man, man, light skin tone, medium-dark skin tone
+👨🏻‍❤️‍💋‍👨🏿 E13.1 kiss: man, man, light skin tone, dark skin tone
+👨🏻‍❤‍💋‍👨🏿 E13.1 kiss: man, man, light skin tone, dark skin tone
+👨🏼‍❤️‍💋‍👨🏻 E13.1 kiss: man, man, medium-light skin tone, light skin tone
+👨🏼‍❤‍💋‍👨🏻 E13.1 kiss: man, man, medium-light skin tone, light skin tone
+👨🏼‍❤️‍💋‍👨🏼 E13.1 kiss: man, man, medium-light skin tone
+👨🏼‍❤‍💋‍👨🏼 E13.1 kiss: man, man, medium-light skin tone
+👨🏼‍❤️‍💋‍👨🏽 E13.1 kiss: man, man, medium-light skin tone, medium skin tone
+👨🏼‍❤‍💋‍👨🏽 E13.1 kiss: man, man, medium-light skin tone, medium skin tone
+👨🏼‍❤️‍💋‍👨🏾 E13.1 kiss: man, man, medium-light skin tone, medium-dark skin tone
+👨🏼‍❤‍💋‍👨🏾 E13.1 kiss: man, man, medium-light skin tone, medium-dark skin tone
+👨🏼‍❤️‍💋‍👨🏿 E13.1 kiss: man, man, medium-light skin tone, dark skin tone
+👨🏼‍❤‍💋‍👨🏿 E13.1 kiss: man, man, medium-light skin tone, dark skin tone
+👨🏽‍❤️‍💋‍👨🏻 E13.1 kiss: man, man, medium skin tone, light skin tone
+👨🏽‍❤‍💋‍👨🏻 E13.1 kiss: man, man, medium skin tone, light skin tone
+👨🏽‍❤️‍💋‍👨🏼 E13.1 kiss: man, man, medium skin tone, medium-light skin tone
+👨🏽‍❤‍💋‍👨🏼 E13.1 kiss: man, man, medium skin tone, medium-light skin tone
+👨🏽‍❤️‍💋‍👨🏽 E13.1 kiss: man, man, medium skin tone
+👨🏽‍❤‍💋‍👨🏽 E13.1 kiss: man, man, medium skin tone
+👨🏽‍❤️‍💋‍👨🏾 E13.1 kiss: man, man, medium skin tone, medium-dark skin tone
+👨🏽‍❤‍💋‍👨🏾 E13.1 kiss: man, man, medium skin tone, medium-dark skin tone
+👨🏽‍❤️‍💋‍👨🏿 E13.1 kiss: man, man, medium skin tone, dark skin tone
+👨🏽‍❤‍💋‍👨🏿 E13.1 kiss: man, man, medium skin tone, dark skin tone
+👨🏾‍❤️‍💋‍👨🏻 E13.1 kiss: man, man, medium-dark skin tone, light skin tone
+👨🏾‍❤‍💋‍👨🏻 E13.1 kiss: man, man, medium-dark skin tone, light skin tone
+👨🏾‍❤️‍💋‍👨🏼 E13.1 kiss: man, man, medium-dark skin tone, medium-light skin tone
+👨🏾‍❤‍💋‍👨🏼 E13.1 kiss: man, man, medium-dark skin tone, medium-light skin tone
+👨🏾‍❤️‍💋‍👨🏽 E13.1 kiss: man, man, medium-dark skin tone, medium skin tone
+👨🏾‍❤‍💋‍👨🏽 E13.1 kiss: man, man, medium-dark skin tone, medium skin tone
+👨🏾‍❤️‍💋‍👨🏾 E13.1 kiss: man, man, medium-dark skin tone
+👨🏾‍❤‍💋‍👨🏾 E13.1 kiss: man, man, medium-dark skin tone
+👨🏾‍❤️‍💋‍👨🏿 E13.1 kiss: man, man, medium-dark skin tone, dark skin tone
+👨🏾‍❤‍💋‍👨🏿 E13.1 kiss: man, man, medium-dark skin tone, dark skin tone
+👨🏿‍❤️‍💋‍👨🏻 E13.1 kiss: man, man, dark skin tone, light skin tone
+👨🏿‍❤‍💋‍👨🏻 E13.1 kiss: man, man, dark skin tone, light skin tone
+👨🏿‍❤️‍💋‍👨🏼 E13.1 kiss: man, man, dark skin tone, medium-light skin tone
+👨🏿‍❤‍💋‍👨🏼 E13.1 kiss: man, man, dark skin tone, medium-light skin tone
+👨🏿‍❤️‍💋‍👨🏽 E13.1 kiss: man, man, dark skin tone, medium skin tone
+👨🏿‍❤‍💋‍👨🏽 E13.1 kiss: man, man, dark skin tone, medium skin tone
+👨🏿‍❤️‍💋‍👨🏾 E13.1 kiss: man, man, dark skin tone, medium-dark skin tone
+👨🏿‍❤‍💋‍👨🏾 E13.1 kiss: man, man, dark skin tone, medium-dark skin tone
+👨🏿‍❤️‍💋‍👨🏿 E13.1 kiss: man, man, dark skin tone
+👨🏿‍❤‍💋‍👨🏿 E13.1 kiss: man, man, dark skin tone
+👩🏻‍❤️‍💋‍👩🏻 E13.1 kiss: woman, woman, light skin tone
+👩🏻‍❤‍💋‍👩🏻 E13.1 kiss: woman, woman, light skin tone
+👩🏻‍❤️‍💋‍👩🏼 E13.1 kiss: woman, woman, light skin tone, medium-light skin tone
+👩🏻‍❤‍💋‍👩🏼 E13.1 kiss: woman, woman, light skin tone, medium-light skin tone
+👩🏻‍❤️‍💋‍👩🏽 E13.1 kiss: woman, woman, light skin tone, medium skin tone
+👩🏻‍❤‍💋‍👩🏽 E13.1 kiss: woman, woman, light skin tone, medium skin tone
+👩🏻‍❤️‍💋‍👩🏾 E13.1 kiss: woman, woman, light skin tone, medium-dark skin tone
+👩🏻‍❤‍💋‍👩🏾 E13.1 kiss: woman, woman, light skin tone, medium-dark skin tone
+👩🏻‍❤️‍💋‍👩🏿 E13.1 kiss: woman, woman, light skin tone, dark skin tone
+👩🏻‍❤‍💋‍👩🏿 E13.1 kiss: woman, woman, light skin tone, dark skin tone
+👩🏼‍❤️‍💋‍👩🏻 E13.1 kiss: woman, woman, medium-light skin tone, light skin tone
+👩🏼‍❤‍💋‍👩🏻 E13.1 kiss: woman, woman, medium-light skin tone, light skin tone
+👩🏼‍❤️‍💋‍👩🏼 E13.1 kiss: woman, woman, medium-light skin tone
+👩🏼‍❤‍💋‍👩🏼 E13.1 kiss: woman, woman, medium-light skin tone
+👩🏼‍❤️‍💋‍👩🏽 E13.1 kiss: woman, woman, medium-light skin tone, medium skin tone
+👩🏼‍❤‍💋‍👩🏽 E13.1 kiss: woman, woman, medium-light skin tone, medium skin tone
+👩🏼‍❤️‍💋‍👩🏾 E13.1 kiss: woman, woman, medium-light skin tone, medium-dark skin tone
+👩🏼‍❤‍💋‍👩🏾 E13.1 kiss: woman, woman, medium-light skin tone, medium-dark skin tone
+👩🏼‍❤️‍💋‍👩🏿 E13.1 kiss: woman, woman, medium-light skin tone, dark skin tone
+👩🏼‍❤‍💋‍👩🏿 E13.1 kiss: woman, woman, medium-light skin tone, dark skin tone
+👩🏽‍❤️‍💋‍👩🏻 E13.1 kiss: woman, woman, medium skin tone, light skin tone
+👩🏽‍❤‍💋‍👩🏻 E13.1 kiss: woman, woman, medium skin tone, light skin tone
+👩🏽‍❤️‍💋‍👩🏼 E13.1 kiss: woman, woman, medium skin tone, medium-light skin tone
+👩🏽‍❤‍💋‍👩🏼 E13.1 kiss: woman, woman, medium skin tone, medium-light skin tone
+👩🏽‍❤️‍💋‍👩🏽 E13.1 kiss: woman, woman, medium skin tone
+👩🏽‍❤‍💋‍👩🏽 E13.1 kiss: woman, woman, medium skin tone
+👩🏽‍❤️‍💋‍👩🏾 E13.1 kiss: woman, woman, medium skin tone, medium-dark skin tone
+👩🏽‍❤‍💋‍👩🏾 E13.1 kiss: woman, woman, medium skin tone, medium-dark skin tone
+👩🏽‍❤️‍💋‍👩🏿 E13.1 kiss: woman, woman, medium skin tone, dark skin tone
+👩🏽‍❤‍💋‍👩🏿 E13.1 kiss: woman, woman, medium skin tone, dark skin tone
+👩🏾‍❤️‍💋‍👩🏻 E13.1 kiss: woman, woman, medium-dark skin tone, light skin tone
+👩🏾‍❤‍💋‍👩🏻 E13.1 kiss: woman, woman, medium-dark skin tone, light skin tone
+👩🏾‍❤️‍💋‍👩🏼 E13.1 kiss: woman, woman, medium-dark skin tone, medium-light skin tone
+👩🏾‍❤‍💋‍👩🏼 E13.1 kiss: woman, woman, medium-dark skin tone, medium-light skin tone
+👩🏾‍❤️‍💋‍👩🏽 E13.1 kiss: woman, woman, medium-dark skin tone, medium skin tone
+👩🏾‍❤‍💋‍👩🏽 E13.1 kiss: woman, woman, medium-dark skin tone, medium skin tone
+👩🏾‍❤️‍💋‍👩🏾 E13.1 kiss: woman, woman, medium-dark skin tone
+👩🏾‍❤‍💋‍👩🏾 E13.1 kiss: woman, woman, medium-dark skin tone
+👩🏾‍❤️‍💋‍👩🏿 E13.1 kiss: woman, woman, medium-dark skin tone, dark skin tone
+👩🏾‍❤‍💋‍👩🏿 E13.1 kiss: woman, woman, medium-dark skin tone, dark skin tone
+👩🏿‍❤️‍💋‍👩🏻 E13.1 kiss: woman, woman, dark skin tone, light skin tone
+👩🏿‍❤‍💋‍👩🏻 E13.1 kiss: woman, woman, dark skin tone, light skin tone
+👩🏿‍❤️‍💋‍👩🏼 E13.1 kiss: woman, woman, dark skin tone, medium-light skin tone
+👩🏿‍❤‍💋‍👩🏼 E13.1 kiss: woman, woman, dark skin tone, medium-light skin tone
+👩🏿‍❤️‍💋‍👩🏽 E13.1 kiss: woman, woman, dark skin tone, medium skin tone
+👩🏿‍❤‍💋‍👩🏽 E13.1 kiss: woman, woman, dark skin tone, medium skin tone
+👩🏿‍❤️‍💋‍👩🏾 E13.1 kiss: woman, woman, dark skin tone, medium-dark skin tone
+👩🏿‍❤‍💋‍👩🏾 E13.1 kiss: woman, woman, dark skin tone, medium-dark skin tone
+👩🏿‍❤️‍💋‍👩🏿 E13.1 kiss: woman, woman, dark skin tone
+👩🏿‍❤‍💋‍👩🏿 E13.1 kiss: woman, woman, dark skin tone
+💑🏻 E13.1 couple with heart: light skin tone
+💑🏼 E13.1 couple with heart: medium-light skin tone
+💑🏽 E13.1 couple with heart: medium skin tone
+💑🏾 E13.1 couple with heart: medium-dark skin tone
+💑🏿 E13.1 couple with heart: dark skin tone
+🧑🏻‍❤️‍🧑🏼 E13.1 couple with heart: person, person, light skin tone, medium-light skin tone
+🧑🏻‍❤‍🧑🏼 E13.1 couple with heart: person, person, light skin tone, medium-light skin tone
+🧑🏻‍❤️‍🧑🏽 E13.1 couple with heart: person, person, light skin tone, medium skin tone
+🧑🏻‍❤‍🧑🏽 E13.1 couple with heart: person, person, light skin tone, medium skin tone
+🧑🏻‍❤️‍🧑🏾 E13.1 couple with heart: person, person, light skin tone, medium-dark skin tone
+🧑🏻‍❤‍🧑🏾 E13.1 couple with heart: person, person, light skin tone, medium-dark skin tone
+🧑🏻‍❤️‍🧑🏿 E13.1 couple with heart: person, person, light skin tone, dark skin tone
+🧑🏻‍❤‍🧑🏿 E13.1 couple with heart: person, person, light skin tone, dark skin tone
+🧑🏼‍❤️‍🧑🏻 E13.1 couple with heart: person, person, medium-light skin tone, light skin tone
+🧑🏼‍❤‍🧑🏻 E13.1 couple with heart: person, person, medium-light skin tone, light skin tone
+🧑🏼‍❤️‍🧑🏽 E13.1 couple with heart: person, person, medium-light skin tone, medium skin tone
+🧑🏼‍❤‍🧑🏽 E13.1 couple with heart: person, person, medium-light skin tone, medium skin tone
+🧑🏼‍❤️‍🧑🏾 E13.1 couple with heart: person, person, medium-light skin tone, medium-dark skin tone
+🧑🏼‍❤‍🧑🏾 E13.1 couple with heart: person, person, medium-light skin tone, medium-dark skin tone
+🧑🏼‍❤️‍🧑🏿 E13.1 couple with heart: person, person, medium-light skin tone, dark skin tone
+🧑🏼‍❤‍🧑🏿 E13.1 couple with heart: person, person, medium-light skin tone, dark skin tone
+🧑🏽‍❤️‍🧑🏻 E13.1 couple with heart: person, person, medium skin tone, light skin tone
+🧑🏽‍❤‍🧑🏻 E13.1 couple with heart: person, person, medium skin tone, light skin tone
+🧑🏽‍❤️‍🧑🏼 E13.1 couple with heart: person, person, medium skin tone, medium-light skin tone
+🧑🏽‍❤‍🧑🏼 E13.1 couple with heart: person, person, medium skin tone, medium-light skin tone
+🧑🏽‍❤️‍🧑🏾 E13.1 couple with heart: person, person, medium skin tone, medium-dark skin tone
+🧑🏽‍❤‍🧑🏾 E13.1 couple with heart: person, person, medium skin tone, medium-dark skin tone
+🧑🏽‍❤️‍🧑🏿 E13.1 couple with heart: person, person, medium skin tone, dark skin tone
+🧑🏽‍❤‍🧑🏿 E13.1 couple with heart: person, person, medium skin tone, dark skin tone
+🧑🏾‍❤️‍🧑🏻 E13.1 couple with heart: person, person, medium-dark skin tone, light skin tone
+🧑🏾‍❤‍🧑🏻 E13.1 couple with heart: person, person, medium-dark skin tone, light skin tone
+🧑🏾‍❤️‍🧑🏼 E13.1 couple with heart: person, person, medium-dark skin tone, medium-light skin tone
+🧑🏾‍❤‍🧑🏼 E13.1 couple with heart: person, person, medium-dark skin tone, medium-light skin tone
+🧑🏾‍❤️‍🧑🏽 E13.1 couple with heart: person, person, medium-dark skin tone, medium skin tone
+🧑🏾‍❤‍🧑🏽 E13.1 couple with heart: person, person, medium-dark skin tone, medium skin tone
+🧑🏾‍❤️‍🧑🏿 E13.1 couple with heart: person, person, medium-dark skin tone, dark skin tone
+🧑🏾‍❤‍🧑🏿 E13.1 couple with heart: person, person, medium-dark skin tone, dark skin tone
+🧑🏿‍❤️‍🧑🏻 E13.1 couple with heart: person, person, dark skin tone, light skin tone
+🧑🏿‍❤‍🧑🏻 E13.1 couple with heart: person, person, dark skin tone, light skin tone
+🧑🏿‍❤️‍🧑🏼 E13.1 couple with heart: person, person, dark skin tone, medium-light skin tone
+🧑🏿‍❤‍🧑🏼 E13.1 couple with heart: person, person, dark skin tone, medium-light skin tone
+🧑🏿‍❤️‍🧑🏽 E13.1 couple with heart: person, person, dark skin tone, medium skin tone
+🧑🏿‍❤‍🧑🏽 E13.1 couple with heart: person, person, dark skin tone, medium skin tone
+🧑🏿‍❤️‍🧑🏾 E13.1 couple with heart: person, person, dark skin tone, medium-dark skin tone
+🧑🏿‍❤‍🧑🏾 E13.1 couple with heart: person, person, dark skin tone, medium-dark skin tone
+👩🏻‍❤️‍👨🏻 E13.1 couple with heart: woman, man, light skin tone
+👩🏻‍❤‍👨🏻 E13.1 couple with heart: woman, man, light skin tone
+👩🏻‍❤️‍👨🏼 E13.1 couple with heart: woman, man, light skin tone, medium-light skin tone
+👩🏻‍❤‍👨🏼 E13.1 couple with heart: woman, man, light skin tone, medium-light skin tone
+👩🏻‍❤️‍👨🏽 E13.1 couple with heart: woman, man, light skin tone, medium skin tone
+👩🏻‍❤‍👨🏽 E13.1 couple with heart: woman, man, light skin tone, medium skin tone
+👩🏻‍❤️‍👨🏾 E13.1 couple with heart: woman, man, light skin tone, medium-dark skin tone
+👩🏻‍❤‍👨🏾 E13.1 couple with heart: woman, man, light skin tone, medium-dark skin tone
+👩🏻‍❤️‍👨🏿 E13.1 couple with heart: woman, man, light skin tone, dark skin tone
+👩🏻‍❤‍👨🏿 E13.1 couple with heart: woman, man, light skin tone, dark skin tone
+👩🏼‍❤️‍👨🏻 E13.1 couple with heart: woman, man, medium-light skin tone, light skin tone
+👩🏼‍❤‍👨🏻 E13.1 couple with heart: woman, man, medium-light skin tone, light skin tone
+👩🏼‍❤️‍👨🏼 E13.1 couple with heart: woman, man, medium-light skin tone
+👩🏼‍❤‍👨🏼 E13.1 couple with heart: woman, man, medium-light skin tone
+👩🏼‍❤️‍👨🏽 E13.1 couple with heart: woman, man, medium-light skin tone, medium skin tone
+👩🏼‍❤‍👨🏽 E13.1 couple with heart: woman, man, medium-light skin tone, medium skin tone
+👩🏼‍❤️‍👨🏾 E13.1 couple with heart: woman, man, medium-light skin tone, medium-dark skin tone
+👩🏼‍❤‍👨🏾 E13.1 couple with heart: woman, man, medium-light skin tone, medium-dark skin tone
+👩🏼‍❤️‍👨🏿 E13.1 couple with heart: woman, man, medium-light skin tone, dark skin tone
+👩🏼‍❤‍👨🏿 E13.1 couple with heart: woman, man, medium-light skin tone, dark skin tone
+👩🏽‍❤️‍👨🏻 E13.1 couple with heart: woman, man, medium skin tone, light skin tone
+👩🏽‍❤‍👨🏻 E13.1 couple with heart: woman, man, medium skin tone, light skin tone
+👩🏽‍❤️‍👨🏼 E13.1 couple with heart: woman, man, medium skin tone, medium-light skin tone
+👩🏽‍❤‍👨🏼 E13.1 couple with heart: woman, man, medium skin tone, medium-light skin tone
+👩🏽‍❤️‍👨🏽 E13.1 couple with heart: woman, man, medium skin tone
+👩🏽‍❤‍👨🏽 E13.1 couple with heart: woman, man, medium skin tone
+👩🏽‍❤️‍👨🏾 E13.1 couple with heart: woman, man, medium skin tone, medium-dark skin tone
+👩🏽‍❤‍👨🏾 E13.1 couple with heart: woman, man, medium skin tone, medium-dark skin tone
+👩🏽‍❤️‍👨🏿 E13.1 couple with heart: woman, man, medium skin tone, dark skin tone
+👩🏽‍❤‍👨🏿 E13.1 couple with heart: woman, man, medium skin tone, dark skin tone
+👩🏾‍❤️‍👨🏻 E13.1 couple with heart: woman, man, medium-dark skin tone, light skin tone
+👩🏾‍❤‍👨🏻 E13.1 couple with heart: woman, man, medium-dark skin tone, light skin tone
+👩🏾‍❤️‍👨🏼 E13.1 couple with heart: woman, man, medium-dark skin tone, medium-light skin tone
+👩🏾‍❤‍👨🏼 E13.1 couple with heart: woman, man, medium-dark skin tone, medium-light skin tone
+👩🏾‍❤️‍👨🏽 E13.1 couple with heart: woman, man, medium-dark skin tone, medium skin tone
+👩🏾‍❤‍👨🏽 E13.1 couple with heart: woman, man, medium-dark skin tone, medium skin tone
+👩🏾‍❤️‍👨🏾 E13.1 couple with heart: woman, man, medium-dark skin tone
+👩🏾‍❤‍👨🏾 E13.1 couple with heart: woman, man, medium-dark skin tone
+👩🏾‍❤️‍👨🏿 E13.1 couple with heart: woman, man, medium-dark skin tone, dark skin tone
+👩🏾‍❤‍👨🏿 E13.1 couple with heart: woman, man, medium-dark skin tone, dark skin tone
+👩🏿‍❤️‍👨🏻 E13.1 couple with heart: woman, man, dark skin tone, light skin tone
+👩🏿‍❤‍👨🏻 E13.1 couple with heart: woman, man, dark skin tone, light skin tone
+👩🏿‍❤️‍👨🏼 E13.1 couple with heart: woman, man, dark skin tone, medium-light skin tone
+👩🏿‍❤‍👨🏼 E13.1 couple with heart: woman, man, dark skin tone, medium-light skin tone
+👩🏿‍❤️‍👨🏽 E13.1 couple with heart: woman, man, dark skin tone, medium skin tone
+👩🏿‍❤‍👨🏽 E13.1 couple with heart: woman, man, dark skin tone, medium skin tone
+👩🏿‍❤️‍👨🏾 E13.1 couple with heart: woman, man, dark skin tone, medium-dark skin tone
+👩🏿‍❤‍👨🏾 E13.1 couple with heart: woman, man, dark skin tone, medium-dark skin tone
+👩🏿‍❤️‍👨🏿 E13.1 couple with heart: woman, man, dark skin tone
+👩🏿‍❤‍👨🏿 E13.1 couple with heart: woman, man, dark skin tone
+👨🏻‍❤️‍👨🏻 E13.1 couple with heart: man, man, light skin tone
+👨🏻‍❤‍👨🏻 E13.1 couple with heart: man, man, light skin tone
+👨🏻‍❤️‍👨🏼 E13.1 couple with heart: man, man, light skin tone, medium-light skin tone
+👨🏻‍❤‍👨🏼 E13.1 couple with heart: man, man, light skin tone, medium-light skin tone
+👨🏻‍❤️‍👨🏽 E13.1 couple with heart: man, man, light skin tone, medium skin tone
+👨🏻‍❤‍👨🏽 E13.1 couple with heart: man, man, light skin tone, medium skin tone
+👨🏻‍❤️‍👨🏾 E13.1 couple with heart: man, man, light skin tone, medium-dark skin tone
+👨🏻‍❤‍👨🏾 E13.1 couple with heart: man, man, light skin tone, medium-dark skin tone
+👨🏻‍❤️‍👨🏿 E13.1 couple with heart: man, man, light skin tone, dark skin tone
+👨🏻‍❤‍👨🏿 E13.1 couple with heart: man, man, light skin tone, dark skin tone
+👨🏼‍❤️‍👨🏻 E13.1 couple with heart: man, man, medium-light skin tone, light skin tone
+👨🏼‍❤‍👨🏻 E13.1 couple with heart: man, man, medium-light skin tone, light skin tone
+👨🏼‍❤️‍👨🏼 E13.1 couple with heart: man, man, medium-light skin tone
+👨🏼‍❤‍👨🏼 E13.1 couple with heart: man, man, medium-light skin tone
+👨🏼‍❤️‍👨🏽 E13.1 couple with heart: man, man, medium-light skin tone, medium skin tone
+👨🏼‍❤‍👨🏽 E13.1 couple with heart: man, man, medium-light skin tone, medium skin tone
+👨🏼‍❤️‍👨🏾 E13.1 couple with heart: man, man, medium-light skin tone, medium-dark skin tone
+👨🏼‍❤‍👨🏾 E13.1 couple with heart: man, man, medium-light skin tone, medium-dark skin tone
+👨🏼‍❤️‍👨🏿 E13.1 couple with heart: man, man, medium-light skin tone, dark skin tone
+👨🏼‍❤‍👨🏿 E13.1 couple with heart: man, man, medium-light skin tone, dark skin tone
+👨🏽‍❤️‍👨🏻 E13.1 couple with heart: man, man, medium skin tone, light skin tone
+👨🏽‍❤‍👨🏻 E13.1 couple with heart: man, man, medium skin tone, light skin tone
+👨🏽‍❤️‍👨🏼 E13.1 couple with heart: man, man, medium skin tone, medium-light skin tone
+👨🏽‍❤‍👨🏼 E13.1 couple with heart: man, man, medium skin tone, medium-light skin tone
+👨🏽‍❤️‍👨🏽 E13.1 couple with heart: man, man, medium skin tone
+👨🏽‍❤‍👨🏽 E13.1 couple with heart: man, man, medium skin tone
+👨🏽‍❤️‍👨🏾 E13.1 couple with heart: man, man, medium skin tone, medium-dark skin tone
+👨🏽‍❤‍👨🏾 E13.1 couple with heart: man, man, medium skin tone, medium-dark skin tone
+👨🏽‍❤️‍👨🏿 E13.1 couple with heart: man, man, medium skin tone, dark skin tone
+👨🏽‍❤‍👨🏿 E13.1 couple with heart: man, man, medium skin tone, dark skin tone
+👨🏾‍❤️‍👨🏻 E13.1 couple with heart: man, man, medium-dark skin tone, light skin tone
+👨🏾‍❤‍👨🏻 E13.1 couple with heart: man, man, medium-dark skin tone, light skin tone
+👨🏾‍❤️‍👨🏼 E13.1 couple with heart: man, man, medium-dark skin tone, medium-light skin tone
+👨🏾‍❤‍👨🏼 E13.1 couple with heart: man, man, medium-dark skin tone, medium-light skin tone
+👨🏾‍❤️‍👨🏽 E13.1 couple with heart: man, man, medium-dark skin tone, medium skin tone
+👨🏾‍❤‍👨🏽 E13.1 couple with heart: man, man, medium-dark skin tone, medium skin tone
+👨🏾‍❤️‍👨🏾 E13.1 couple with heart: man, man, medium-dark skin tone
+👨🏾‍❤‍👨🏾 E13.1 couple with heart: man, man, medium-dark skin tone
+👨🏾‍❤️‍👨🏿 E13.1 couple with heart: man, man, medium-dark skin tone, dark skin tone
+👨🏾‍❤‍👨🏿 E13.1 couple with heart: man, man, medium-dark skin tone, dark skin tone
+👨🏿‍❤️‍👨🏻 E13.1 couple with heart: man, man, dark skin tone, light skin tone
+👨🏿‍❤‍👨🏻 E13.1 couple with heart: man, man, dark skin tone, light skin tone
+👨🏿‍❤️‍👨🏼 E13.1 couple with heart: man, man, dark skin tone, medium-light skin tone
+👨🏿‍❤‍👨🏼 E13.1 couple with heart: man, man, dark skin tone, medium-light skin tone
+👨🏿‍❤️‍👨🏽 E13.1 couple with heart: man, man, dark skin tone, medium skin tone
+👨🏿‍❤‍👨🏽 E13.1 couple with heart: man, man, dark skin tone, medium skin tone
+👨🏿‍❤️‍👨🏾 E13.1 couple with heart: man, man, dark skin tone, medium-dark skin tone
+👨🏿‍❤‍👨🏾 E13.1 couple with heart: man, man, dark skin tone, medium-dark skin tone
+👨🏿‍❤️‍👨🏿 E13.1 couple with heart: man, man, dark skin tone
+👨🏿‍❤‍👨🏿 E13.1 couple with heart: man, man, dark skin tone
+👩🏻‍❤️‍👩🏻 E13.1 couple with heart: woman, woman, light skin tone
+👩🏻‍❤‍👩🏻 E13.1 couple with heart: woman, woman, light skin tone
+👩🏻‍❤️‍👩🏼 E13.1 couple with heart: woman, woman, light skin tone, medium-light skin tone
+👩🏻‍❤‍👩🏼 E13.1 couple with heart: woman, woman, light skin tone, medium-light skin tone
+👩🏻‍❤️‍👩🏽 E13.1 couple with heart: woman, woman, light skin tone, medium skin tone
+👩🏻‍❤‍👩🏽 E13.1 couple with heart: woman, woman, light skin tone, medium skin tone
+👩🏻‍❤️‍👩🏾 E13.1 couple with heart: woman, woman, light skin tone, medium-dark skin tone
+👩🏻‍❤‍👩🏾 E13.1 couple with heart: woman, woman, light skin tone, medium-dark skin tone
+👩🏻‍❤️‍👩🏿 E13.1 couple with heart: woman, woman, light skin tone, dark skin tone
+👩🏻‍❤‍👩🏿 E13.1 couple with heart: woman, woman, light skin tone, dark skin tone
+👩🏼‍❤️‍👩🏻 E13.1 couple with heart: woman, woman, medium-light skin tone, light skin tone
+👩🏼‍❤‍👩🏻 E13.1 couple with heart: woman, woman, medium-light skin tone, light skin tone
+👩🏼‍❤️‍👩🏼 E13.1 couple with heart: woman, woman, medium-light skin tone
+👩🏼‍❤‍👩🏼 E13.1 couple with heart: woman, woman, medium-light skin tone
+👩🏼‍❤️‍👩🏽 E13.1 couple with heart: woman, woman, medium-light skin tone, medium skin tone
+👩🏼‍❤‍👩🏽 E13.1 couple with heart: woman, woman, medium-light skin tone, medium skin tone
+👩🏼‍❤️‍👩🏾 E13.1 couple with heart: woman, woman, medium-light skin tone, medium-dark skin tone
+👩🏼‍❤‍👩🏾 E13.1 couple with heart: woman, woman, medium-light skin tone, medium-dark skin tone
+👩🏼‍❤️‍👩🏿 E13.1 couple with heart: woman, woman, medium-light skin tone, dark skin tone
+👩🏼‍❤‍👩🏿 E13.1 couple with heart: woman, woman, medium-light skin tone, dark skin tone
+👩🏽‍❤️‍👩🏻 E13.1 couple with heart: woman, woman, medium skin tone, light skin tone
+👩🏽‍❤‍👩🏻 E13.1 couple with heart: woman, woman, medium skin tone, light skin tone
+👩🏽‍❤️‍👩🏼 E13.1 couple with heart: woman, woman, medium skin tone, medium-light skin tone
+👩🏽‍❤‍👩🏼 E13.1 couple with heart: woman, woman, medium skin tone, medium-light skin tone
+👩🏽‍❤️‍👩🏽 E13.1 couple with heart: woman, woman, medium skin tone
+👩🏽‍❤‍👩🏽 E13.1 couple with heart: woman, woman, medium skin tone
+👩🏽‍❤️‍👩🏾 E13.1 couple with heart: woman, woman, medium skin tone, medium-dark skin tone
+👩🏽‍❤‍👩🏾 E13.1 couple with heart: woman, woman, medium skin tone, medium-dark skin tone
+👩🏽‍❤️‍👩🏿 E13.1 couple with heart: woman, woman, medium skin tone, dark skin tone
+👩🏽‍❤‍👩🏿 E13.1 couple with heart: woman, woman, medium skin tone, dark skin tone
+👩🏾‍❤️‍👩🏻 E13.1 couple with heart: woman, woman, medium-dark skin tone, light skin tone
+👩🏾‍❤‍👩🏻 E13.1 couple with heart: woman, woman, medium-dark skin tone, light skin tone
+👩🏾‍❤️‍👩🏼 E13.1 couple with heart: woman, woman, medium-dark skin tone, medium-light skin tone
+👩🏾‍❤‍👩🏼 E13.1 couple with heart: woman, woman, medium-dark skin tone, medium-light skin tone
+👩🏾‍❤️‍👩🏽 E13.1 couple with heart: woman, woman, medium-dark skin tone, medium skin tone
+👩🏾‍❤‍👩🏽 E13.1 couple with heart: woman, woman, medium-dark skin tone, medium skin tone
+👩🏾‍❤️‍👩🏾 E13.1 couple with heart: woman, woman, medium-dark skin tone
+👩🏾‍❤‍👩🏾 E13.1 couple with heart: woman, woman, medium-dark skin tone
+👩🏾‍❤️‍👩🏿 E13.1 couple with heart: woman, woman, medium-dark skin tone, dark skin tone
+👩🏾‍❤‍👩🏿 E13.1 couple with heart: woman, woman, medium-dark skin tone, dark skin tone
+👩🏿‍❤️‍👩🏻 E13.1 couple with heart: woman, woman, dark skin tone, light skin tone
+👩🏿‍❤‍👩🏻 E13.1 couple with heart: woman, woman, dark skin tone, light skin tone
+👩🏿‍❤️‍👩🏼 E13.1 couple with heart: woman, woman, dark skin tone, medium-light skin tone
+👩🏿‍❤‍👩🏼 E13.1 couple with heart: woman, woman, dark skin tone, medium-light skin tone
+👩🏿‍❤️‍👩🏽 E13.1 couple with heart: woman, woman, dark skin tone, medium skin tone
+👩🏿‍❤‍👩🏽 E13.1 couple with heart: woman, woman, dark skin tone, medium skin tone
+👩🏿‍❤️‍👩🏾 E13.1 couple with heart: woman, woman, dark skin tone, medium-dark skin tone
+👩🏿‍❤‍👩🏾 E13.1 couple with heart: woman, woman, dark skin tone, medium-dark skin tone
+👩🏿‍❤️‍👩🏿 E13.1 couple with heart: woman, woman, dark skin tone
+👩🏿‍❤‍👩🏿 E13.1 couple with heart: woman, woman, dark skin tone
+STRING
+
+      sanitized_string = RemoveEmoji::Sanitize.call(original_string)
+
+      sanitized_string.split("\n").each do |line|
+         index = line =~ /^ E13\.1/
+         _(index).must_equal(0)
+      end
+    end
+
     it '必須可以處理 emoji 13.0 beta 標準' do
 
       original_string = <<-STRING
@@ -18,7 +452,7 @@ STRING
 [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["©"],["©"],["®"],["®"],[""],[""],["#"],["#"],["*"],["*"],["0"],["0"],["1"],["1"],["2"],["2"],["3"],["3"],["4"],["4"],["5"],["5"],["6"],["6"],["7"],["7"],["8"],["8"],["9"],["9"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]]
 STRING
 
-      sanitized_string.must_equal(expect_string)
+      _(sanitized_string).must_equal(expect_string)
     end
 
     it '必須可以處理 emoji 11.0 標準' do
@@ -189,7 +623,7 @@ STRING
 
       expect_string = " Smiling Face With 3 Hearts Hot Face Cold Face Partying Face Woozy Face Pleading Face Man: Red Hair Man: Light Skin Tone, Red Hair Man: Medium-Light Skin Tone, Red Hair Man: Medium Skin Tone, Red Hair Man: Medium-Dark Skin Tone, Red Hair Man: Dark Skin Tone, Red Hair Woman: Red Hair Woman: Light Skin Tone, Red Hair Woman: Medium-Light Skin Tone, Red Hair Woman: Medium Skin Tone, Red Hair Woman: Medium-Dark Skin Tone, Red Hair Woman: Dark Skin Tone, Red Hair Man: Curly Hair Man: Light Skin Tone, Curly Hair Man: Medium-Light Skin Tone, Curly Hair Man: Medium Skin Tone, Curly Hair Man: Medium-Dark Skin Tone, Curly Hair Man: Dark Skin Tone, Curly Hair Woman: Curly Hair Woman: Light Skin Tone, Curly Hair Woman: Medium-Light Skin Tone, Curly Hair Woman: Medium Skin Tone, Curly Hair Woman: Medium-Dark Skin Tone, Curly Hair Woman: Dark Skin Tone, Curly Hair Man: Bald Man: Light Skin Tone, Bald Man: Medium-Light Skin Tone, Bald Man: Medium Skin Tone, Bald Man: Medium-Dark Skin Tone, Bald Man: Dark Skin Tone, Bald Woman: Bald Woman: Light Skin Tone, Bald Woman: Medium-Light Skin Tone, Bald Woman: Medium Skin Tone, Bald Woman: Medium-Dark Skin Tone, Bald Woman: Dark Skin Tone, Bald Man: White Hair Man: Light Skin Tone, White Hair Man: Medium-Light Skin Tone, White Hair Man: Medium Skin Tone, White Hair Man: Medium-Dark Skin Tone, White Hair Man: Dark Skin Tone, White Hair Woman: White Hair Woman: Light Skin Tone, White Hair Woman: Medium-Light Skin Tone, White Hair Woman: Medium Skin Tone, White Hair Woman: Medium-Dark Skin Tone, White Hair Woman: Dark Skin Tone, White Hair Superhero Superhero: Light Skin Tone Superhero: Medium-Light Skin Tone Superhero: Medium Skin Tone Superhero: Medium-Dark Skin Tone Superhero: Dark Skin Tone Woman Superhero Woman Superhero: Light Skin Tone Woman Superhero: Medium-Light Skin Tone Woman Superhero: Medium Skin Tone Woman Superhero: Medium-Dark Skin Tone Woman Superhero: Dark Skin Tone Man Superhero Man Superhero: Light Skin Tone Man Superhero: Medium-Light Skin Tone Man Superhero: Medium Skin Tone Man Superhero: Medium-Dark Skin Tone Man Superhero: Dark Skin Tone Supervillain Supervillain: Light Skin Tone Supervillain: Medium-Light Skin Tone Supervillain: Medium Skin Tone Supervillain: Medium-Dark Skin Tone Supervillain: Dark Skin Tone Woman Supervillain Woman Supervillain: Light Skin Tone Woman Supervillain: Medium-Light Skin Tone Woman Supervillain: Medium Skin Tone Woman Supervillain: Medium-Dark Skin Tone Woman Supervillain: Dark Skin Tone Man Supervillain Man Supervillain: Light Skin Tone Man Supervillain: Medium-Light Skin Tone Man Supervillain: Medium Skin Tone Man Supervillain: Medium-Dark Skin Tone Man Supervillain: Dark Skin Tone Leg Leg: Light Skin Tone Leg: Medium-Light Skin Tone Leg: Medium Skin Tone Leg: Medium-Dark Skin Tone Leg: Dark Skin Tone Foot Foot: Light Skin Tone Foot: Medium-Light Skin Tone Foot: Medium Skin Tone Foot: Medium-Dark Skin Tone Foot: Dark Skin Tone Bone Tooth Goggles Lab Coat Hiking Boot Flat Shoe Raccoon Llama Hippopotamus Kangaroo Badger Swan Peacock Parrot Lobster Mosquito Microbe Mango Leafy Green Bagel Salt Moon Cake Cupcake Compass Brick Skateboard Luggage Firecracker Red Envelope Softball Flying Disc Lacrosse Nazar Amulet Jigsaw Teddy Bear Chess Pawn Abacus Receipt Toolbox Magnet Test Tube Petri Dish DNA Fire Extinguisher Lotion Bottle Thread Yarn Safety Pin Broom Basket Roll of Paper Soap Sponge Infinity Pirate Flag Red Hair Curly Hair Bald White Hair"
 
-      sanitized_string.must_equal(expect_string)
+      _(sanitized_string).must_equal(expect_string)
     end
 
     it '必須清除以下常見的 emoji 符號' do
@@ -235,7 +669,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string.gsub(/[\r\n]/, ''))
 
-      sanitized_string.must_equal(expect_string)
+      _(sanitized_string).must_equal(expect_string)
     end
 
     it '必須清除以下常見的 emoji 國旗' do
@@ -254,7 +688,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string.gsub(/[\r\n]/, ''))
 
-      sanitized_string.must_equal(expect_string)
+      _(sanitized_string).must_equal(expect_string)
     end
 
     it '必須清除以下隨機挑選的 apple emoji ' do
@@ -273,7 +707,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string.gsub(/[\r\n]/, ''))
 
-      sanitized_string.must_equal(expect_string)
+      _(sanitized_string).must_equal(expect_string)
     end
 
     it '必須清除以下指定的 sample emoji variation sequences' do
@@ -282,7 +716,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
 
-      sanitized_string.must_equal(expect_string)
+      _(sanitized_string).must_equal(expect_string)
     end
 
     it '必須清除以下 fitzpatrick modifiers ' do
@@ -291,7 +725,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
 
-      sanitized_string.must_equal(expect_string)
+      _(sanitized_string).must_equal(expect_string)
     end
 
     it '不能過濾掉以下常用的特殊符號，因為程式處理宗旨是移除「emoji」' do
@@ -331,7 +765,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
 
-      sanitized_string.must_equal(original_string)
+      _(sanitized_string).must_equal(original_string)
     end
 
     it '電話、愛心、星星等 emoji 需要移除掉' do
@@ -340,7 +774,7 @@ STRING
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
       expect_string = '..'
 
-      sanitized_string.must_equal(expect_string)
+      _(sanitized_string).must_equal(expect_string)
     end
 
     it '必須不會移除到中文資料跟文中的所有符號內容' do
@@ -401,7 +835,7 @@ STRING
 STRING
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
 
-      sanitized_string.must_equal(original_string)
+      _(sanitized_string).must_equal(original_string)
     end
 
     it '必須不會移除到日本資料跟文中的所有符號內容' do
@@ -471,7 +905,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
 
-      sanitized_string.must_equal(original_string)
+      _(sanitized_string).must_equal(original_string)
     end
 
     it '必須不會移除到韓文內容，跟所有的文中符號' do
@@ -518,7 +952,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
 
-      sanitized_string.must_equal(original_string)
+      _(sanitized_string).must_equal(original_string)
     end
 
     it '必須不會移除到簡體中文內容，跟所有的文中符號' do
@@ -577,7 +1011,7 @@ STRING
 
       sanitized_string = RemoveEmoji::Sanitize.call(original_string)
 
-      sanitized_string.must_equal(original_string)
+      _(sanitized_string).must_equal(original_string)
     end
 
 
@@ -630,7 +1064,7 @@ STRING
       end
 
       best_performance = benchmark_info.real < 0.05
-      best_performance.must_equal(true)
+      _(best_performance).must_equal(true)
     end
 
   end
