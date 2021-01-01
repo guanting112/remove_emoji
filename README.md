@@ -1,4 +1,4 @@
-Remove Emoji
+Remove Emoji ( 2021 )
 =================================================
 
 [![Gem Version](https://badge.fury.io/rb/remove_emoji.svg)](https://badge.fury.io/rb/remove_emoji)
@@ -9,7 +9,7 @@ Remove Emoji
 您可以透過該套件移除令人困擾的 Emoji 符號。
 ( It can remove any of the emoji supported by that package. )
 
-![emoji](https://i.imgur.com/yA6WYmS.jpg)
+![emoji](https://i.imgur.com/h1Ip0r6.png)
 
 
 Installation / 安裝方式
