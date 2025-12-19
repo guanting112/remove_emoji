@@ -1,37 +1,20 @@
-
-lib = File.expand_path("../lib", __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "remove_emoji/version"
+# frozen_string_literal: true
 
 Gem::Specification.new do |spec|
-  spec.name          = "remove_emoji"
-  spec.version       = RemoveEmoji::VERSION
-  spec.authors       = ["Guanting Chen"]
-  spec.email         = ["cgt886@gmail.com"]
-  spec.summary       = %q{ Remove Emoji 😈🚫😱 ( 2021 version, for Ruby 2.x ~ 3 / Rails 4 ~ 6.x )}
-  spec.description   = %q{ Remove Emoji 😈🚫😱 ( 2021 version, for Ruby 2.x ~ 3 / Rails 4 ~ 6.x )}
-  spec.homepage      = "https://github.com/guanting112/remove_emoji"
-  spec.license       = "MIT"
-  spec.platform      = Gem::Platform::RUBY
-  spec.required_ruby_version = '>= 2'
+  spec.name = "remove_emoji"
+  spec.version = "4.0.0"
+  spec.authors = ["Guanting112"]
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "https://rubygems.org"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
+  spec.summary = %q{ Remove Emoji 🚫😱 ( for Ruby 2.x ~ 4 / Rails 4 ~ 8 )}
+  spec.description = %q{ Remove Emoji 🚫😱 ( for Ruby 2.x ~ 4 / Rails 4 ~ 8 )}
+  spec.homepage = "https://github.com/guanting112/remove_emoji"
+  spec.license = "MIT"
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
+    Dir["{lib}/**/*", "LICENSE", "README.md"]
   end
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "<3.0", ">=1.7"
-  spec.add_development_dependency "rake", ">= 12.3.3"
-  spec.add_development_dependency 'minitest', '~> 5.0'
+  spec.add_development_dependency "rspec", "~> 3.0"
 end

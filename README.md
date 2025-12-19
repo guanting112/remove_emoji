@@ -1,18 +1,16 @@
-Remove Emoji ( 2021 )
+Remove Emoji ( for Ruby )
 =================================================
 
 [![Gem Version](https://badge.fury.io/rb/remove_emoji.svg)](https://badge.fury.io/rb/remove_emoji)
-[![Build Status](https://travis-ci.org/guanting112/remove_emoji.svg?branch=master)](https://travis-ci.org/guanting112/remove_emoji)
+[![Ruby CI](https://github.com/guanting112/remove_emoji/actions/workflows/ci.yml/badge.svg)](https://github.com/guanting112/remove_emoji/actions)
 [![Code Climate](https://codeclimate.com/github/guanting112/remove_emoji/badges/gpa.svg)](https://codeclimate.com/github/guanting112/remove_emoji)
 
-此為針對「移除」Unicode Emoji 圖示 所開發的專屬套件，
-您可以透過該套件移除令人困擾的 Emoji 符號。
-( It can remove any of the emoji supported by that package. )
+This is a gem developed for "removing" Unicode Emoji icons, you can use this gem to remove annoying Emoji symbols.
 
 ![emoji](https://i.imgur.com/h1Ip0r6.png)
 
 
-Installation / 安裝方式
+Installation
 --------
 
 via Rubygems
@@ -24,20 +22,20 @@ gem install remove_emoji
 In your Gemfile:
 
 ```ruby
-gem 'remove_emoji', '~> 3.0.0'
+gem 'remove_emoji', '~> 4.0.0'
 ```
 
-Usage / 使用方式
+Usage
 --------
 
-使用方式很簡單，僅需要呼叫 RemoveEmoji::Sanitize.call 遞入你要過濾的字串即可過濾。
+Usage is simple, just call `RemoveEmoji.remove` passing in the string you want to filter.
 
 ```ruby
 require 'remove_emoji'
 
 original_string = "😊😍😌🤕👿👹👧👧🏻👧🏼👧🏽🤜🏼👍🏽👌☝🏼🥝🥦🌶🌽🍎"
 
-puts RemoveEmoji::Sanitize.call(original_string)
+puts RemoveEmoji.remove(original_string)
 ```
 
 ```ruby
@@ -64,7 +62,7 @@ STRING
 # ==========
 #   Output
 # ==========
-puts RemoveEmoji::Sanitize.call(original_string)
+puts RemoveEmoji.remove(original_string)
 
 # Result:
 # abcdefghijklmnopqrstuvwxyz....0123456789
@@ -86,8 +84,3 @@ Demo ( Before / After )
 ------
 
 ![emoji_effect](https://i.imgur.com/OzcQYWL.jpg)
-
-LICENSE
---------
-
-本專案原始碼採 MIT LICENSE 授權 ( 詳見 LICENSE 檔案 )
