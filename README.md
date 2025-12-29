@@ -3,7 +3,6 @@ Remove Emoji ( for Ruby )
 
 [![Gem Version](https://badge.fury.io/rb/remove_emoji.svg)](https://badge.fury.io/rb/remove_emoji)
 [![Ruby CI](https://github.com/guanting112/remove_emoji/actions/workflows/ci.yml/badge.svg)](https://github.com/guanting112/remove_emoji/actions)
-[![Code Climate](https://codeclimate.com/github/guanting112/remove_emoji/badges/gpa.svg)](https://codeclimate.com/github/guanting112/remove_emoji)
 
 This is a gem developed for "removing" Unicode Emoji icons, you can use this gem to remove annoying Emoji symbols.
 
@@ -79,8 +78,3 @@ puts RemoveEmoji.remove(original_string)
 # لمنطقة الشرق الأوسط هيلي: التحرك ضد إيران سيبدأ من مجلس الأمن
 
 ```
-
-Demo ( Before / After )
-------
-
-![emoji_effect](https://i.imgur.com/OzcQYWL.jpg)
