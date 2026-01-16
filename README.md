@@ -8,6 +8,9 @@ This is a gem developed for "removing" Unicode Emoji icons, you can use this gem
 
 ![emoji](https://i.imgur.com/h1Ip0r6.png)
 
+## Golang version
+
+- [go-remove-emoji](https://github.com/guanting112/go-remove-emoji)
 
 Installation
 --------
